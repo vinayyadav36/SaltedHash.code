@@ -49,7 +49,7 @@ export default function Chat() {
       setLoading(true);
       setError("");
       try {
-        const res = await fetch(`${API_URL}/api/chat`);
+        const res = await fetch(`${API_URL}/api/chat?room=${encodeURIComponent(roomId)}`);
         if (!res.ok) throw new Error('Failed to load messages');
         const data = await res.json();
         setMessages(data);
@@ -60,7 +60,7 @@ export default function Chat() {
       }
     };
     fetchMessages();
-  }, []);
+  }, [roomId]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -75,7 +75,7 @@ export default function Chat() {
       const res = await fetch(`${API_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user: "Anonymous", message: newMessage })
+        body: JSON.stringify({ user: "Anonymous", message: newMessage, room: roomId })
       });
       if (!res.ok) throw new Error('Failed to send message');
       const { data } = await res.json();
