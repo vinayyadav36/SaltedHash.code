@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     const { room } = req.query;
     const filter = room ? { room } : {};
     // Limit to 100 most recent messages per room; use ?limit= query param to override
-    const limit = Math.min(parseInt(req.query.limit as string) || 100, 500);
+    const limit = Math.min(parseInt(req.query.limit) || 100, 500);
     const messages = await ChatMessage.find(filter).sort({ createdAt: 1 }).limit(limit);
     res.status(200).json(messages);
   } catch (error) {

@@ -2,7 +2,7 @@
 "use client";
 import { useState } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL = '';
 
 interface NewsletterFormProps {
   onSkip?: () => void;
@@ -20,7 +20,7 @@ const NewsletterForm: React.FC<NewsletterFormProps> = ({ onSkip, onSubmitted }) 
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${API_URL}/api/newsletter`, {
+      const res = await fetch(`/api/newsletter`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
