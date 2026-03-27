@@ -112,14 +112,20 @@ export default function AdminDashboard() {
     if (!window.confirm('Delete this message?')) return;
     const res = await fetch(`/api/contact/${id}`, { method: 'DELETE', headers: authHeaders(token || '') });
     if (res.ok) setMessages((prev) => prev.filter((m) => m.id !== id));
-    else setError('Failed to delete message.');
+    else {
+      const data = await res.json().catch(() => ({}));
+      setError(data.message || 'Failed to delete message.');
+    }
   };
 
   const deleteSubscriber = async (id: string) => {
     if (!window.confirm('Remove this subscriber?')) return;
     const res = await fetch(`/api/newsletter/${id}`, { method: 'DELETE', headers: authHeaders(token || '') });
     if (res.ok) setSubscribers((prev) => prev.filter((s) => s.id !== id));
-    else setError('Failed to remove subscriber.');
+    else {
+      const data = await res.json().catch(() => ({}));
+      setError(data.message || 'Failed to remove subscriber.');
+    }
   };
 
   if (!isAuthenticated) {

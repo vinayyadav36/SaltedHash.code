@@ -3,7 +3,11 @@ import { getDb, generateId } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-dev-secret-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET && process.env.NODE_ENV === 'production') {
+  throw new Error('JWT_SECRET environment variable is required in production');
+}
+const SECRET = JWT_SECRET || 'fallback-dev-secret-change-in-production';
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -24,6 +28,6 @@ export async function POST(req: NextRequest) {
   const id = generateId();
   db.prepare('INSERT INTO users (id, name, email, password, role) VALUES (?, ?, ?, ?, ?)').run(id, name.trim(), email.trim(), hash, 'user');
 
-  const token = jwt.sign({ user: { id, role: 'user' } }, JWT_SECRET, { expiresIn: '7d' });
+  const token = jwt.sign({ user: { id, role: 'user' } }, SECRET, { expiresIn: '7d' });
   return NextResponse.json({ token }, { status: 201 });
 }

@@ -2,6 +2,7 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 import bcrypt from 'bcryptjs';
+import { randomUUID } from 'crypto';
 
 // Store DB in a persistent data directory
 const DATA_DIR = path.join(process.cwd(), 'data');
@@ -63,7 +64,6 @@ function initSchema(db: Database.Database): void {
   const adminEmail = process.env.ADMIN_EMAIL || 'admin@vinay.dev';
   const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(adminEmail);
   if (!existing) {
-    const { randomUUID } = require('crypto');
     const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@12345';
     const hash = bcrypt.hashSync(adminPassword, 10);
     db.prepare(
@@ -74,6 +74,5 @@ function initSchema(db: Database.Database): void {
 }
 
 export function generateId(): string {
-  const { randomUUID } = require('crypto');
   return randomUUID();
 }
