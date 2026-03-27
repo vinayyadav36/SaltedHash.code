@@ -48,6 +48,7 @@
     "autoprefixer": "10.4.15",
     "axios": "^1.10.0",
     "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^12.8.0",
     "body-parser": "^1.20.2",
     "bufferutil": "^4.0.9",
     "class-variance-authority": "^0.7.0",
@@ -88,5 +89,10 @@
     "utf-8-validate": "^6.0.5",
     "vaul": "^0.9.9",
     "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/jsonwebtoken": "^9.0.10"
   }
 }
