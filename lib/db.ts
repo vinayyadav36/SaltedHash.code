@@ -4,8 +4,8 @@ import fs from 'fs';
 import bcrypt from 'bcryptjs';
 import { randomUUID } from 'crypto';
 
-// Store DB in a persistent data directory
-const DATA_DIR = path.join(process.cwd(), 'data');
+// Store DB in a persistent data directory (respects DATA_DIR env var for Docker)
+const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), 'data');
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
