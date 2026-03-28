@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Trash2, RefreshCw, LogOut, Mail, MessageSquare, Users } from 'lucide-react';
+import { Trash2, RefreshCw, LogOut, Mail, MessageSquare, Users, Download } from 'lucide-react';
 
 interface ContactMessage {
   id: string;
@@ -126,6 +126,24 @@ export default function AdminDashboard() {
       const data = await res.json().catch(() => ({}));
       setError(data.message || 'Failed to remove subscriber.');
     }
+  };
+
+  const exportSubscribersCSV = () => {
+    const link = document.createElement('a');
+    fetch('/api/newsletter/export', { headers: authHeaders(token || '') })
+      .then((res) => {
+        if (!res.ok) throw new Error('Export failed');
+        return res.blob();
+      })
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      })
+      .catch(() => setError('Failed to export subscribers.'));
   };
 
   if (!isAuthenticated) {
@@ -304,6 +322,15 @@ export default function AdminDashboard() {
                   <div className="p-8 text-center text-gray-500">No newsletter subscribers yet.</div>
                 ) : (
                   <div className="overflow-x-auto">
+                    <div className="flex justify-end px-4 py-2 border-b border-yellow-500/10">
+                      <button
+                        onClick={exportSubscribersCSV}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-500 border border-yellow-500/20 rounded-lg transition-colors"
+                      >
+                        <Download size={14} />
+                        Export CSV
+                      </button>
+                    </div>
                     <table className="min-w-full divide-y divide-yellow-500/10">
                       <thead>
                         <tr className="text-left text-xs text-gray-500 uppercase">
